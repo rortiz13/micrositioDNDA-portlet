@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:head />
+	<h:body>
+		<h:form >
+		<p:messages id="messages" />
+		<h:panelGrid id="formulario" width="80%" header="Archivo">
+		<h:panelGrid  columns="2" cellpadding="5">  	
+		
+			<h:outputText value="Tipo de Archivo " />  
+			<p:selectOneMenu value="#{BeanRepositorioAdm.tipoarchivo}"  id="tarch">  
+	            <f:selectItem itemLabel="Seleccione " itemValue="" />  
+	            <f:selectItems value="#{BeanRepositorioAdm.tipoArchivos}" var="select" itemLabel="#{select.nombre}" itemValue="#{select.codigo}" />	 
+	            <p:ajax update="formulario" listener="#{BeanRepositorioAdm.actExt}"/>           
+	        </p:selectOneMenu>
+	        <h:outputText value="Tipo de Video" rendered="#{BeanRepositorioAdm.video}" />            
+	     	<p:selectOneMenu  id="vid" value="#{BeanRepositorioAdm.tipovideo}" rendered="#{BeanRepositorioAdm.video}">
+				<f:selectItem itemLabel="Link URL" itemValue="1" />
+				<f:selectItem itemLabel="Archivo de Video" itemValue="2" />	
+				<p:ajax update="formulario" /> 	 
+			</p:selectOneMenu>	        
+			<h:outputText value="Categoria " />  
+			<p:selectOneMenu value="#{BeanRepositorioAdm.categoria}"  id="categ">  
+	            <f:selectItem itemLabel="Seleccione " itemValue="" />  
+	            <f:selectItems value="#{BeanRepositorioAdm.categorias}" var="selectCateg" itemLabel="#{selectCateg.nombre}" itemValue="#{selectCateg.codigo}" />	            
+	        </p:selectOneMenu>
+            <h:outputText value="Palabras Clave " />  
+			<p:inputText  id="palab" value="#{BeanRepositorioAdm.palabras}" size="60" ></p:inputText>
+            <h:outputText value="Fecha de Publicacion - " />  
+            <h:outputText value="#{BeanRepositorioAdm.fecha}" />  
+			<h:outputText value="URL" rendered="#{BeanRepositorioAdm.url}" />  
+			<p:inputText  id="ubi" value="#{BeanRepositorioAdm.ubicacion}" size="120" rendered="#{BeanRepositorioAdm.url}"></p:inputText>
+    		   
+        </h:panelGrid> 
+         <br/> <br/> <br/>
+        <h:panelGrid rendered="#{BeanRepositorioAdm.videolink}" width="80%" header="Archivo">
+				<h:form enctype="multipart/form-data" id="formUploadFiles">
+					<h:panelGrid width="100%">
+						<p:messages for="uploadFile" />
+					</h:panelGrid>
+					<p:fileUpload fileUploadListener="#{BeanRepositorioAdm.uploadFile}"  mode="advanced" id="uploadFile" multiple="false" update="formUploadFiles"
+						allowTypes="#{BeanRepositorioAdm.ext}" auto="true" uploadLabel="Guardar Archivo" cancelLabel="Cancelar"
+						label="Seleccionar Archivo" showButtons="true" sizeLimit="100000000" required="false" />
+					<p:dataList rendered="#{!empty BeanRepositorioAdm.filesUpload}" value="#{BeanRepositorioAdm.filesUpload}" var="file">
+						<h:outputText value="#{file.fileName}" />				
+					</p:dataList>			
+					
+				</h:form>
+		</h:panelGrid>
+		</h:panelGrid>
+        <br/>
+        <div align="center">
+				<p:commandButton ajax="false" action="#{BeanRepositorioAdm.subirArchivo}" value="Enviar" ></p:commandButton>
+		</div>
+	 	</h:form>	
+	 	 <br/>
+	 	
+	</h:body>
+</f:view>

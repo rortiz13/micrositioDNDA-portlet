@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+
+<f:view
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:head />
+	<h:body>
+	<h:form >
+			<p:panel header="Buscador">
+			<p:messages id="messages" />
+							
+				<h:panelGrid columns="1" width="100%">					
+					<h:outputText value="Fechas" />
+					<h:panelGrid columns="4" width="70%">
+						<p:outputLabel for="desde" value="Desde" />
+						<p:calendar id="desde" value="#{BeanRepositorioUser.dsd}"  />
+						<p:outputLabel for="hasta" value="Hasta" />
+						<p:calendar id="hasta" value="#{BeanRepositorioUser.hst}" />
+
+					</h:panelGrid>
+					<br />
+					<h:panelGrid columns="3" width="100%">
+
+						<p:outputLabel value="Categoria" for="id_categoria" />
+						<p:outputLabel value="Tipo de Documento" for="id_tipo" />						
+						 <p:outputLabel value="Palabras Clave" for="nombres_solicitante" />
+							
+						<h:selectOneMenu value="#{BeanRepositorioUser.categoria}"  id="id_categoria">  
+				            <f:selectItem itemLabel="Seleccione " itemValue="" />  
+				            <f:selectItems value="#{BeanRepositorioUser.categorias}" var="selectCateg" itemLabel="#{selectCateg.nombre}" itemValue="#{selectCateg.codigo}" />	            
+				        </h:selectOneMenu>
+
+						<h:selectOneMenu value="#{BeanRepositorioUser.tipoarchivo}"  id="id_tipo">  
+				            <f:selectItem itemLabel="Seleccione " itemValue="" />  
+				            <f:selectItems value="#{BeanRepositorioUser.tipoArchivos}" var="select" itemLabel="#{select.nombre}" itemValue="#{select.codigo}" />	            
+				        </h:selectOneMenu>
+				       
+						<p:inputText value="#{BeanRepositorioUser.palabras}" size="60" id="nombres_solicitante"></p:inputText>
+						 
+					</h:panelGrid>
+
+				</h:panelGrid>
+
+				<br />
+				<div align="center">
+					<p:commandButton ajax="false" value="Buscar" action="#{BeanRepositorioUser.cargar}" ></p:commandButton>
+					
+				</div>
+				
+					</p:panel>
+		</h:form>		
+	<br/><br/>
+	<h:form id="formListado">
+		<p:dataTable  value="#{BeanRepositorioUser.listado}" var="row" id="lista" rows="12"  paginator="true"  
+                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "  
+                 rowsPerPageTemplate="5,10,15" style="border-style:none;"   type="none">    
+		            <f:facet name="header">  
+		            Documentos
+		            </f:facet>  
+		             <p:column headerText="Nombre">			             	
+              			<h:outputText rendered="#{row.nombre != 'null'}" value=" #{row.nombre}" style=" font-size:18px;"  />
+              			<h:outputText rendered="#{row.nombre == 'null'}" value=" #{row.ruta}"  />	                			     	         
+		          	 </p:column>
+		          	 <p:column headerText="Tipo de Documento">	
+		          	 	<h:outputText  value=" #{row.tipodocumento}"   />          	         
+		          	 </p:column>
+		          	 <p:column headerText="Categoria">	          	
+		          	 	<h:outputText value=" #{row.categoria}"   />         
+		          	 </p:column>
+		          	 <p:column headerText="Fecha de Publicacion">	    
+		          	 	<h:outputText value=" #{row.fecha}"   />      	         
+		          	 </p:column>
+		           
+		          	 <p:column rendered="#{row.nombre != 'null'}" headerText="">	    
+		          	 	<h:commandLink    ajax="false" action="#{BeanRepositorioUser.repAudio(row)}"> 
+              			<h:outputText value=" Ver"   />	                			          
+            			</h:commandLink>		          	 	 	         
+		          	 </p:column>
+		          	 <p:column rendered="#{row.nombre == 'null'}" headerText="Ver">	    
+		          	 	<a  href="#{row.ruta}" target="_blank">Ver </a> 		          	 	 	         
+		          	 </p:column>
+		          	 
+		          	 <p:column rendered="#{row.nombre != 'null'}" headerText="">
+		          	 	<h:commandLink    ajax="false"> 
+              			<h:outputText value=" Descargar"   />	  
+              			<p:fileDownload value="#{BeanRepositorioUser.getFile(row)}" />            
+            			</h:commandLink> 
+		          	 </p:column>    
+		          	
+   			 </p:dataTable > 
+   	</h:form>
+	
+	</h:body>
+</f:view>
